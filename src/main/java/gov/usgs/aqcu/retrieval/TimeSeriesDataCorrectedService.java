@@ -17,17 +17,18 @@ public class TimeSeriesDataCorrectedService {
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
-	public TimeSeriesDataCorrectedService(AquariusRetrievalService aquariusRetrievalService) {
+	public TimeSeriesDataCorrectedService(
+		AquariusRetrievalService aquariusRetrievalService
+	) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
-	protected TimeSeriesDataServiceResponse get(String timeSeriesIdentifier, Instant startDate, Instant endDate) throws Exception {
+	public TimeSeriesDataServiceResponse getRawResponse(String primaryTimeseriesIdentifier, Instant startDate, Instant endDate) {
 		TimeSeriesDataCorrectedServiceRequest request = new TimeSeriesDataCorrectedServiceRequest()
-				.setTimeSeriesUniqueId(timeSeriesIdentifier)
+				.setTimeSeriesUniqueId(primaryTimeseriesIdentifier)
 				.setQueryFrom(startDate)
-				.setQueryTo(endDate)
-				.setApplyRounding(true)
-				.setIncludeGapMarkers(true);
+				.setIncludeGapMarkers(true)
+				.setQueryTo(endDate);
 		TimeSeriesDataServiceResponse timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
 		return timeSeriesResponse;
 	}
