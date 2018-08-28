@@ -7,9 +7,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Proc
 
 public class CorrectionsAtAGlanceCorrectedData extends TimeSeriesDataServiceResponse {
 	private List<DataGap> gaps;
-	private List<Processor> processors;
 
-	public CorrectionsAtAGlanceCorrectedData(TimeSeriesDataServiceResponse response, List<Processor> upchainProcessorList, List<DataGap> gapList) {
+	public CorrectionsAtAGlanceCorrectedData(TimeSeriesDataServiceResponse response, List<DataGap> gapList) {
 		setApprovals(response.getApprovals());
 		setQualifiers(response.getQualifiers());
 		setNotes(response.getNotes());
@@ -17,13 +16,11 @@ public class CorrectionsAtAGlanceCorrectedData extends TimeSeriesDataServiceResp
 		setGapTolerances(response.getGapTolerances());
 		setInterpolationTypes(response.getInterpolationTypes());
 		setGrades(response.getGrades());
-		setProcessors(upchainProcessorList);
 		setGaps(gapList);
 	}
 	
 	public CorrectionsAtAGlanceCorrectedData() {
 		gaps = new ArrayList<>();
-		processors = new ArrayList<>();
 	}
 	
 	public List<DataGap> getGaps() {
@@ -32,13 +29,5 @@ public class CorrectionsAtAGlanceCorrectedData extends TimeSeriesDataServiceResp
 	
 	public void setGaps(List<DataGap> val) {
 		gaps = val;
-	}
-	
-	public List<Processor> getProcessors() {
-		return processors;
-	}
-	
-	public void setProcessors(List<Processor> val) {
-		processors = val;
 	}
 }
