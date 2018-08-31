@@ -1,24 +1,15 @@
 package gov.usgs.aqcu.model;
 
 import java.util.List;
-import java.util.ArrayList;
 
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.RatingCurve;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesThreshold;
 
 public class CorrectionsAtAGlanceReport {	
-	private CorrectionsAtAGlanceCorrectedData primaryTsData;
-	private TimeSeriesDescription primaryTsMetadata;
+	private TimeSeriesCorrectedData primarySeries;
+	private List<TimeSeriesThreshold> thresholds;
 	private CorrectionsAtAGlanceCorrections corrections;
+	private List<CorrectionsAtAGlanceFieldVisitDescription> fieldVisits;
 	private CorrectionsAtAGlanceReportMetadata reportMetadata;
-	
-	
-	public CorrectionsAtAGlanceReport() {
-		primaryTsData = new CorrectionsAtAGlanceCorrectedData();
-		primaryTsMetadata = new TimeSeriesDescription();
-		corrections = new CorrectionsAtAGlanceCorrections();
-		reportMetadata = new CorrectionsAtAGlanceReportMetadata();
-	}
 	
 	public CorrectionsAtAGlanceReportMetadata getReportMetadata() {
 		return reportMetadata;
@@ -28,12 +19,16 @@ public class CorrectionsAtAGlanceReport {
 		return corrections;
 	}
 	
-	public CorrectionsAtAGlanceCorrectedData getPrimaryTsData() {
-		return primaryTsData;
+	public TimeSeriesCorrectedData getPrimaryTsData() {
+		return primarySeries;
 	}
 	
-	public TimeSeriesDescription getPrimaryTsMetadata() {
-		return primaryTsMetadata;
+	public List<TimeSeriesThreshold> getThresholds() {
+		return thresholds;
+	}
+	
+	public List<CorrectionsAtAGlanceFieldVisitDescription> getFieldVisits() {
+		return fieldVisits;
 	}
 	
 	public void setReportMetadata(CorrectionsAtAGlanceReportMetadata val) {
@@ -44,12 +39,16 @@ public class CorrectionsAtAGlanceReport {
 		corrections = val;
 	}
 	
-	public void setPrimaryTsData(CorrectionsAtAGlanceCorrectedData val) {
-		primaryTsData = val;
+	public void setPrimaryTsData(TimeSeriesCorrectedData val) {
+		primarySeries = val;
 	}
 	
-	public void setPrimaryTsMetadata(TimeSeriesDescription val) {
-		primaryTsMetadata = val;
+	public void setThresholds(List<TimeSeriesThreshold> val) {
+		thresholds = val;
+	}
+	
+	public void setFieldVisits(List<CorrectionsAtAGlanceFieldVisitDescription> val) {
+		fieldVisits = val;
 	}
 }
 	

@@ -28,8 +28,10 @@ public class TimeSeriesDataCorrectedService {
 				.setTimeSeriesUniqueId(primaryTimeseriesIdentifier)
 				.setQueryFrom(startDate)
 				.setIncludeGapMarkers(true)
-				.setQueryTo(endDate);
+				.setQueryTo(endDate)
+				.setGetParts("MetadataOnly");
 		TimeSeriesDataServiceResponse timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
 		return timeSeriesResponse;
 	}
+
 }

@@ -43,7 +43,7 @@ public class TimeSeriesDescriptionListServiceTest {
 		.setSecondaryReferenceValue(2.0)
 		.setSuppressData(false);
 
-	private static final TimeSeriesThreshold threshold1 = new TimeSeriesThreshold()
+	public static final TimeSeriesThreshold threshold1 = new TimeSeriesThreshold()
 		.setDescription("desc-1")
 		.setDisplayColor("color1")
 		.setName("name-1")

@@ -10,9 +10,8 @@ public class CorrectionsAtAGlanceCorrections {
 	private List<ExtendedCorrection> preProcessing;
 	private List<ExtendedCorrection> normal;
 	private List<ExtendedCorrection> postProcessing;
-	String corrUrl;
 
-	public CorrectionsAtAGlanceCorrections(List<ExtendedCorrection> correctionList, String corrUrl) {
+	public CorrectionsAtAGlanceCorrections(List<ExtendedCorrection> correctionList) {
 		preProcessing = new ArrayList<>();
 		normal = new ArrayList<>();
 		postProcessing = new ArrayList<>();
@@ -29,7 +28,6 @@ public class CorrectionsAtAGlanceCorrections {
 			}
 		}
 
-		setCorrUrl(corrUrl);
 	}
 	
 	public CorrectionsAtAGlanceCorrections() {
@@ -49,10 +47,6 @@ public class CorrectionsAtAGlanceCorrections {
 	public List<ExtendedCorrection> getPostProcessing() {
 		return postProcessing;
 	}
-	
-	public String getCorrUrl() {
-		return corrUrl;
-	}
 
 	public void setPreProcessing(List<ExtendedCorrection> val) {
 		preProcessing = val;
@@ -64,9 +58,5 @@ public class CorrectionsAtAGlanceCorrections {
 	
 	public void setPostProcessing(List<ExtendedCorrection> val) {
 		postProcessing = val;
-	}
-	
-	public void setCorrUrl(String val) {
-		corrUrl = val;
 	}
 }

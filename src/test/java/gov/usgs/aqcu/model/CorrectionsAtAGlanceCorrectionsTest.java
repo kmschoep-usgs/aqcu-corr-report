@@ -24,8 +24,7 @@ public class CorrectionsAtAGlanceCorrectionsTest {
 
     @Test
 	public void constructorTest() {
-        CorrectionsAtAGlanceCorrections corrections = new CorrectionsAtAGlanceCorrections(corrList, "corr-url");
-        assertEquals(corrections.getCorrUrl(), "corr-url");
+        CorrectionsAtAGlanceCorrections corrections = new CorrectionsAtAGlanceCorrections(corrList);
 		assertEquals(corrections.getPreProcessing().size(), 0);
 		assertEquals(corrections.getNormal().size(), 1);
 		assertThat(corrections.getNormal(), containsInAnyOrder(corrList.get(0)));
