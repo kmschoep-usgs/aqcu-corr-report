@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Qualifier;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDescription;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Grade;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
@@ -89,7 +90,7 @@ public class CorrectionsAtAGlanceReportBuilderService {
 	}
 
 	protected CorrectionsAtAGlanceCorrections getCorrectionsData(CorrectionsAtAGlanceRequestParameters requestParameters, ZoneOffset primaryZoneOffset, String stationId) {
-		List<ExtendedCorrection> correctionList = correctionListService.getExtendedCorrectionList(
+		List<Correction> correctionList = correctionListService.getCorrectionList(
 			requestParameters.getPrimaryTimeseriesIdentifier(), 
 			requestParameters.getStartInstant(primaryZoneOffset), 
 			requestParameters.getEndInstant(primaryZoneOffset), 

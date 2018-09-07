@@ -2,22 +2,23 @@ package gov.usgs.aqcu.model;
 
 import java.util.List;
 
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.CorrectionProcessingOrder;
 
 import java.util.ArrayList;
 
 public class CorrectionsAtAGlanceCorrections {	
-	private List<ExtendedCorrection> preProcessing;
-	private List<ExtendedCorrection> normal;
-	private List<ExtendedCorrection> postProcessing;
+	private List<Correction> preProcessing;
+	private List<Correction> normal;
+	private List<Correction> postProcessing;
 
-	public CorrectionsAtAGlanceCorrections(List<ExtendedCorrection> correctionList) {
+	public CorrectionsAtAGlanceCorrections(List<Correction> correctionList) {
 		preProcessing = new ArrayList<>();
 		normal = new ArrayList<>();
 		postProcessing = new ArrayList<>();
 
 		if(!correctionList.isEmpty()) {
-			for(ExtendedCorrection corr : correctionList) {
+			for(Correction corr : correctionList) {
 				if(corr.getProcessingOrder() == CorrectionProcessingOrder.PreProcessing) {
 					preProcessing.add(corr);
 				} else if(corr.getProcessingOrder() == CorrectionProcessingOrder.Normal) {
@@ -36,27 +37,27 @@ public class CorrectionsAtAGlanceCorrections {
 		postProcessing  = new ArrayList<>();
 	}
 	
-	public List<ExtendedCorrection> getPreProcessing() {
+	public List<Correction> getPreProcessing() {
 		return preProcessing;
 	}
 	
-	public List<ExtendedCorrection> getNormal() {
+	public List<Correction> getNormal() {
 		return normal;
 	}
 	
-	public List<ExtendedCorrection> getPostProcessing() {
+	public List<Correction> getPostProcessing() {
 		return postProcessing;
 	}
 
-	public void setPreProcessing(List<ExtendedCorrection> val) {
+	public void setPreProcessing(List<Correction> val) {
 		preProcessing = val;
 	}
 	
-	public void setNormal(List<ExtendedCorrection> val) {
+	public void setNormal(List<Correction> val) {
 		normal = val;
 	}
 	
-	public void setPostProcessing(List<ExtendedCorrection> val) {
+	public void setPostProcessing(List<Correction> val) {
 		postProcessing = val;
 	}
 }
