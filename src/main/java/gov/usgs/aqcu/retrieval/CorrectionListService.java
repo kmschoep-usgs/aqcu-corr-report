@@ -37,26 +37,12 @@ public class CorrectionListService  {
 		return correctionListResponse;
 	}
 
-	public List<Correction> getCorrectionList(String timeseriesUniqueId, Instant startDate, Instant endDate, List<String> excludedCorrections) {
-		List<Correction> corrections = new ArrayList<>();
-		List<ExtendedCorrection> extendedCorrections = createExtendedCorrectionsFromCorrections(getRawResponse(timeseriesUniqueId, startDate, endDate).getCorrections(), excludedCorrections);
-		for(ExtendedCorrection aqcuCorr: extendedCorrections) {
-			Correction corr = new Correction();
-			corr.setType(aqcuCorr.getType());
-			corr.setStartTime(aqcuCorr.getStartTime());
-			corr.setEndTime(aqcuCorr.getEndTime());
-			corr.setAppliedTimeUtc(aqcuCorr.getAppliedTimeUtc());
-			corr.setComment(aqcuCorr.getComment());
-			corr.setUser(aqcuCorr.getUser());
-			corr.setParameters(aqcuCorr.getParameters());
-			corr.setProcessingOrder(aqcuCorr.getProcessingOrder());	
-			corrections.add(corr);
-		}
-		return corrections;
+	public List<ExtendedCorrection> getExtendedCorrectionList(String timeseriesUniqueId, Instant startDate, Instant endDate, List<String> excludedCorrections) {
+		return createExtendedCorrectionsFromCorrections(getRawResponse(timeseriesUniqueId, startDate, endDate).getCorrections(), excludedCorrections);
 	}
 
-	public List<Correction> getCorrectionList(String timeseriesUniqueId, Instant startDate, Instant endDate) {
-		return getCorrectionList(timeseriesUniqueId, startDate, endDate, null);
+	public List<ExtendedCorrection> getExtendedCorrectionList(String timeseriesUniqueId, Instant startDate, Instant endDate) {
+		return getExtendedCorrectionList(timeseriesUniqueId, startDate, endDate, null);
 	}
 
 	private List<ExtendedCorrection> createExtendedCorrectionsFromCorrections(List<Correction> sourceCorrections, List<String> excludedCorrections) {

@@ -71,17 +71,22 @@ public class CorrectionListServiceTest {
     
     @Test
 	public void getAqcuExtendedCorrectionListTest() {
-		List<Correction> actual = service.getCorrectionList("test-identifier", Instant.parse("2016-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z"));
+		List<ExtendedCorrection> actual = service.getExtendedCorrectionList("test-identifier", Instant.parse("2016-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z"));
         assertEquals(2, actual.size());
         assertEquals(actual.get(0).getComment().compareTo(CORR_A.getComment()), 0);
+        assertEquals(actual.get(0).getAqcuExtendedCorrectionType(), null);
+        assertEquals(actual.get(0).getDominantType().compareTo(CORR_A.getType().toString()), 0);
         assertEquals(actual.get(1).getComment().compareTo(CORR_B.getComment()), 0);
+        assertEquals(actual.get(1).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
+        assertEquals(actual.get(1).getDominantType().compareTo(ExtendedCorrectionType.Freehand.toString()), 0);
     }
 
     @Test
 	public void getAqcuExtendedCorrectionListFilteredTest() {
-		List<Correction> actual = service.getCorrectionList("test-identifier", Instant.parse("2016-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z"), Arrays.asList(CorrectionType.Offset.toString()));
+		List<ExtendedCorrection> actual = service.getExtendedCorrectionList("test-identifier", Instant.parse("2016-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z"), Arrays.asList(CorrectionType.Offset.toString()));
         assertEquals(1, actual.size());
         assertEquals(actual.get(0).getComment().compareTo(CORR_B.getComment()), 0);
-        assertEquals(actual.get(0).getType(), CorrectionType.CopyPaste);
+        assertEquals(actual.get(0).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
+        assertEquals(actual.get(0).getDominantType().compareTo(ExtendedCorrectionType.Freehand.toString()), 0);
     }
 }

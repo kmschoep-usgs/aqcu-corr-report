@@ -80,7 +80,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 	TimeSeriesDescription primaryDesc = TimeSeriesDescriptionListServiceTest.DESC_1;
 	List<TimeSeriesThreshold> thresholds;
 	TimeSeriesDataServiceResponse primaryData = TimeSeriesDataCorrectedServiceTest.TS_DATA_RESPONSE;
-	List<Correction> corrs;
+	List<ExtendedCorrection> extCorrs;
 	LocationDescription primaryLoc = new LocationDescription().setIdentifier(primaryDesc.getLocationIdentifier()).setName("loc-name");
 
 	@Before
@@ -106,7 +106,10 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 		metadata.setTitle(CorrectionsAtAGlanceReportBuilderService.REPORT_TITLE);
 
 		//Corrections
-		corrs = CorrectionListServiceTest.CORR_LIST;
+		extCorrs = new ArrayList<>();
+		for(Correction corr : CorrectionListServiceTest.CORR_LIST) {
+			extCorrs.add(new ExtendedCorrection(corr));
+		}
 		
 		//Thresholds
 		thresholds = new ArrayList<>();
@@ -124,8 +127,8 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 			.willReturn(TimeSeriesDescriptionListServiceTest.DESC_LIST);
 		given(tsDataService.getRawResponse(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC)))
 			.willReturn(primaryData);
-		given(corrListService.getCorrectionList(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC), requestParams.getExcludedCorrections()))
-			.willReturn(corrs);
+		given(corrListService.getExtendedCorrectionList(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC), requestParams.getExcludedCorrections()))
+			.willReturn(extCorrs);
 		given(locService.getByLocationIdentifier(metadata.getStationId()))
 			.willReturn(primaryLoc);
 		given(gradeService.getByGradeList(any(ArrayList.class)))
@@ -143,9 +146,9 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 		assertEquals(report.getReportMetadata().getEndDate(), metadata.getEndDate());		
 		assertEquals(report.getCorrections().getPreProcessing().size(), 0);
 		assertEquals(report.getCorrections().getNormal().size(), 1);
-		assertThat(report.getCorrections().getNormal(), containsInAnyOrder(corrs.get(0)));
+		assertThat(report.getCorrections().getNormal(), containsInAnyOrder(extCorrs.get(0)));
 		assertEquals(report.getCorrections().getPostProcessing().size(), 1);
-		assertThat(report.getCorrections().getPostProcessing(), containsInAnyOrder(corrs.get(1)));
+		assertThat(report.getCorrections().getPostProcessing(), containsInAnyOrder(extCorrs.get(1)));
 		assertEquals(report.getPrimaryTsData().getApprovals(), primaryData.getApprovals());
 		assertEquals(report.getPrimaryTsData().getGrades(), primaryData.getGrades());
 		assertEquals(report.getPrimaryTsData().getNotes(), primaryData.getNotes());
@@ -161,15 +164,15 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 
 	@Test
 	public void getCorrectionDataTest() {
-		given(corrListService.getCorrectionList(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC), requestParams.getExcludedCorrections()))
-			.willReturn(corrs);
+		given(corrListService.getExtendedCorrectionList(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC), requestParams.getExcludedCorrections()))
+			.willReturn(extCorrs);
 
-		CorrectionsAtAGlanceCorrections corrs1 = service.getCorrectionsData(requestParams, ZoneOffset.UTC, metadata.getStationId());
-		assertEquals(corrs1.getPreProcessing().size(), 0);
-		assertEquals(corrs1.getNormal().size(), 1);
-		assertThat(corrs1.getNormal(), containsInAnyOrder(corrs.get(0)));
-		assertEquals(corrs1.getPostProcessing().size(), 1);
-		assertThat(corrs1.getPostProcessing(), containsInAnyOrder(corrs.get(1)));
+		CorrectionsAtAGlanceCorrections corrs = service.getCorrectionsData(requestParams, ZoneOffset.UTC, metadata.getStationId());
+		assertEquals(corrs.getPreProcessing().size(), 0);
+		assertEquals(corrs.getNormal().size(), 1);
+		assertThat(corrs.getNormal(), containsInAnyOrder(extCorrs.get(0)));
+		assertEquals(corrs.getPostProcessing().size(), 1);
+		assertThat(corrs.getPostProcessing(), containsInAnyOrder(extCorrs.get(1)));
 	}
 
 	@Test
