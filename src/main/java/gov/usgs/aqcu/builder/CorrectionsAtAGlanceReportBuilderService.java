@@ -33,7 +33,7 @@ public class CorrectionsAtAGlanceReportBuilderService {
 	private QualifierLookupService qualifierLookupService;
 	private LocationDescriptionListService locationDescriptionListService;
 	private TimeSeriesDescriptionListService timeSeriesDescriptionListService;
-	private TimeSeriesDataCorrectedService timeSeriesDataCorrectedService;
+	private TimeSeriesDataService timeSeriesDataService;
 	private CorrectionListService correctionListService;
 	private FieldVisitDescriptionService fieldVisitDescriptionService;
 
@@ -43,10 +43,10 @@ public class CorrectionsAtAGlanceReportBuilderService {
 		QualifierLookupService qualifierLookupService,
 		LocationDescriptionListService locationDescriptionListService,
 		TimeSeriesDescriptionListService timeSeriesDescriptionListService,
-		TimeSeriesDataCorrectedService timeSeriesDataCorrectedService,
+		TimeSeriesDataService timeSeriesDataService,
 		CorrectionListService correctionListService,
 		FieldVisitDescriptionService  fieldVisitDescriptionService ) {
-		this.timeSeriesDataCorrectedService = timeSeriesDataCorrectedService;
+		this.timeSeriesDataService = timeSeriesDataService;
 		this.correctionListService = correctionListService;
 		this.gradeLookupService = gradeLookupService;
 		this.qualifierLookupService = qualifierLookupService;
@@ -126,15 +126,18 @@ public class CorrectionsAtAGlanceReportBuilderService {
 	}
 	protected TimeSeriesCorrectedData getCorrectedData(CorrectionsAtAGlanceRequestParameters requestParameters, ZoneOffset primaryZoneOffset, boolean isDaily) {
 		TimeSeriesCorrectedData timeSeriesCorrectedData = null;
-		//Fetch Corrected Data
-		TimeSeriesDataServiceResponse dataResponse = timeSeriesDataCorrectedService.getRawResponse(
-			requestParameters.getPrimaryTimeseriesIdentifier(), 
-			requestParameters.getStartInstant(primaryZoneOffset), 
-			requestParameters.getEndInstant(primaryZoneOffset));
 
-			if (dataResponse != null) {
-				timeSeriesCorrectedData = createTimeSeriesCorrectedData(requestParameters, dataResponse, isDaily, primaryZoneOffset);
-			}
+		//Fetch Corrected Data
+		TimeSeriesDataServiceResponse dataResponse = timeSeriesDataService.get(
+			requestParameters.getPrimaryTimeseriesIdentifier(), 
+			requestParameters,
+			primaryZoneOffset,
+			isDaily, false, true, null
+		);
+
+		if (dataResponse != null) {
+			timeSeriesCorrectedData = createTimeSeriesCorrectedData(requestParameters, dataResponse, isDaily, primaryZoneOffset);
+		}
 
 		return timeSeriesCorrectedData;
 	}

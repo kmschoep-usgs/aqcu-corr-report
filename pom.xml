@@ -16,7 +16,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <springfox.version>2.8.0</springfox.version>
         <aquarius.sdk.version>18.6.2</aquarius.sdk.version>
-        <aqcu.framework.version>0.0.3</aqcu.framework.version>
+        <aqcu.framework.version>0.0.4-SNAPSHOT</aqcu.framework.version>
     </properties>
 
     <distributionManagement>
@@ -162,6 +162,13 @@
             <groupId>uk.co.datumedge</groupId>
             <artifactId>hamcrest-json</artifactId>
             <version>0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>gov.usgs.aqcu</groupId>
+            <artifactId>aqcu-framework</artifactId>
+            <version>${aqcu.framework.version}</version>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
