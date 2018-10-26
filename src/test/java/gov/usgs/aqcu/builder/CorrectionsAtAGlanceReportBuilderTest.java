@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ import gov.usgs.aqcu.retrieval.FieldVisitDescriptionService;
 import gov.usgs.aqcu.retrieval.GradeLookupService;
 import gov.usgs.aqcu.retrieval.LocationDescriptionListService;
 import gov.usgs.aqcu.retrieval.QualifierLookupService;
-import gov.usgs.aqcu.retrieval.TimeSeriesDataCorrectedService;
-import gov.usgs.aqcu.retrieval.TimeSeriesDataCorrectedServiceTest;
+import gov.usgs.aqcu.retrieval.TimeSeriesDataService;
+import gov.usgs.aqcu.retrieval.TimeSeriesDataServiceTest;
 import gov.usgs.aqcu.retrieval.TimeSeriesDescriptionListService;
 import gov.usgs.aqcu.retrieval.TimeSeriesDescriptionListServiceTest;
 import gov.usgs.aqcu.util.AqcuGsonBuilderFactory;
@@ -46,6 +47,7 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Loca
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDataServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesThreshold;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesThresholdPeriod;
 import com.google.gson.Gson;
 
 @RunWith(SpringRunner.class)
@@ -59,7 +61,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 	@MockBean
 	private TimeSeriesDescriptionListService descService;
 	@MockBean
-	private TimeSeriesDataCorrectedService tsDataService;
+	private TimeSeriesDataService tsDataService;
 	@MockBean
 	private FieldVisitDescriptionService fieldVisitDescriptionService;
 	@MockBean
@@ -78,8 +80,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 	private CorrectionsAtAGlanceRequestParameters requestParams;
 	CorrectionsAtAGlanceReportMetadata metadata;
 	TimeSeriesDescription primaryDesc = TimeSeriesDescriptionListServiceTest.DESC_1;
-	List<TimeSeriesThreshold> thresholds;
-	TimeSeriesDataServiceResponse primaryData = TimeSeriesDataCorrectedServiceTest.TS_DATA_RESPONSE;
+	TimeSeriesDataServiceResponse primaryData = TimeSeriesDataServiceTest.TS_DATA_RESPONSE;
 	List<ExtendedCorrection> extCorrs;
 	LocationDescription primaryLoc = new LocationDescription().setIdentifier(primaryDesc.getLocationIdentifier()).setName("loc-name");
 
@@ -110,12 +111,6 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 		for(Correction corr : CorrectionListServiceTest.CORR_LIST) {
 			extCorrs.add(new ExtendedCorrection(corr));
 		}
-		
-		//Thresholds
-		thresholds = new ArrayList<>();
-		thresholds.add(TimeSeriesDescriptionListServiceTest.threshold1);
-		
-
 	}
 	
 	@Test
@@ -125,7 +120,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 			.willReturn(primaryDesc);
 		given(descService.getTimeSeriesDescriptionList(any(List.class)))
 			.willReturn(TimeSeriesDescriptionListServiceTest.DESC_LIST);
-		given(tsDataService.getRawResponse(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC)))
+		given(tsDataService.get(requestParams.getPrimaryTimeseriesIdentifier(), requestParams, ZoneOffset.UTC, false, false, true, null))
 			.willReturn(primaryData);
 		given(corrListService.getExtendedCorrectionList(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC), requestParams.getExcludedCorrections()))
 			.willReturn(extCorrs);
@@ -159,7 +154,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 		assertEquals(report.getReportMetadata().getStationName(), metadata.getStationName());
 		assertEquals(report.getReportMetadata().getGradeMetadata(), new HashMap<>());
 		assertEquals(report.getReportMetadata().getQualifierMetadata(), new HashMap<>());
-		assertEquals(report.getThresholds(), thresholds);
+		assertEquals(report.getThresholds(), TimeSeriesDescriptionListServiceTest.DESC_1.getThresholds());
 	}
 
 	@Test
@@ -202,7 +197,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 
 	@Test
 	public void getCorrectedDataTest() {
-		given(tsDataService.getRawResponse(requestParams.getPrimaryTimeseriesIdentifier(), requestParams.getStartInstant(ZoneOffset.UTC), requestParams.getEndInstant(ZoneOffset.UTC)))
+		given(tsDataService.get(requestParams.getPrimaryTimeseriesIdentifier(), requestParams, ZoneOffset.UTC, false, false, true, null))
 			.willReturn(primaryData);
 		TimeSeriesCorrectedData corrData = service.getCorrectedData(requestParams, ZoneOffset.UTC, false);
 		assertTrue(corrData != null);
