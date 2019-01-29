@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -40,15 +39,11 @@ import gov.usgs.aqcu.retrieval.TimeSeriesDataService;
 import gov.usgs.aqcu.retrieval.TimeSeriesDataServiceTest;
 import gov.usgs.aqcu.retrieval.TimeSeriesDescriptionListService;
 import gov.usgs.aqcu.retrieval.TimeSeriesDescriptionListServiceTest;
-import gov.usgs.aqcu.util.AqcuGsonBuilderFactory;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.LocationDescription;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDataServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesThreshold;
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesThresholdPeriod;
-import com.google.gson.Gson;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -73,21 +68,18 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 	@MockBean
 	private LocationDescriptionListService locService;
 
-	private Gson gson;
-
 	private CorrectionsAtAGlanceReportBuilderService service;
 	private final String REQUESTING_USER = "test-user";
 	private CorrectionsAtAGlanceRequestParameters requestParams;
 	CorrectionsAtAGlanceReportMetadata metadata;
 	TimeSeriesDescription primaryDesc = TimeSeriesDescriptionListServiceTest.DESC_1;
-	TimeSeriesDataServiceResponse primaryData = TimeSeriesDataServiceTest.TS_DATA_RESPONSE;
+	TimeSeriesDataServiceResponse primaryData;
 	List<ExtendedCorrection> extCorrs;
 	LocationDescription primaryLoc = new LocationDescription().setIdentifier(primaryDesc.getLocationIdentifier()).setName("loc-name");
 
 	@Before
 	public void setup() {
 		//Builder Services
-		gson = AqcuGsonBuilderFactory.getConfiguredGsonBuilder().create();
 		service = new CorrectionsAtAGlanceReportBuilderService(gradeService, qualService, locService, descService, tsDataService, corrListService, fieldVisitDescriptionService);
 
 		//Request Parameters
@@ -96,6 +88,7 @@ public class CorrectionsAtAGlanceReportBuilderTest {
 		requestParams.setEndDate(LocalDate.parse("2017-02-01"));
 		requestParams.setPrimaryTimeseriesIdentifier(primaryDesc.getUniqueId());
 		requestParams.setExcludedCorrections(Arrays.asList("corr1", "corr2"));
+		primaryData = TimeSeriesDataServiceTest.buildData();
 
 		//Metadata
 		metadata = new CorrectionsAtAGlanceReportMetadata();

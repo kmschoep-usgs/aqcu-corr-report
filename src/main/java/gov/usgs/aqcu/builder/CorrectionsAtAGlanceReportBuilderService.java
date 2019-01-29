@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.ZoneOffset;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,8 +23,6 @@ import gov.usgs.aqcu.retrieval.*;
 public class CorrectionsAtAGlanceReportBuilderService {
 	public static final String REPORT_TITLE = "Corrections at a Glance";
 	public static final String REPORT_TYPE = "correctionsataglance";
-
-	private static final Logger LOG = LoggerFactory.getLogger(CorrectionsAtAGlanceReportBuilderService.class);
 
 	private GradeLookupService gradeLookupService;
 	private QualifierLookupService qualifierLookupService;
