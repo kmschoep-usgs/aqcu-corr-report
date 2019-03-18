@@ -57,42 +57,38 @@ public class CorrectionsAtAGlanceReportBuilderService {
 	@LogExecutionTime
 	public CorrectionsAtAGlanceReport buildReport(CorrectionsAtAGlanceRequestParameters requestParameters, String requestingUser) {
 		CorrectionsAtAGlanceReport report = new CorrectionsAtAGlanceReport();
-		try {
-			//Primary TS Metadata
-			log.debug("Get time series descriptions");
-			TimeSeriesDescription primaryDescription = timeSeriesDescriptionListService.getTimeSeriesDescription(requestParameters.getPrimaryTimeseriesIdentifier());
-			ZoneOffset primaryZoneOffset = TimeSeriesUtils.getZoneOffset(primaryDescription);
-			String primaryStationId = primaryDescription.getLocationIdentifier();
-	
-			//Primary TS Data
-			log.debug("Get primary time series data points");
-			report.setPrimaryTsData(getCorrectedData(requestParameters, primaryZoneOffset, TimeSeriesUtils.isDailyTimeSeries(primaryDescription)));
-			
-			//Thresholds
-			log.debug("Get primary time series thresholds");
-			report.setThresholds(primaryDescription.getThresholds());
-			
-			//Corrections Data
-			log.debug("Get primary time series corrections");
-			report.setCorrections(getCorrectionsData(requestParameters, primaryZoneOffset, primaryStationId));
-			
-			//Field Visits
-			log.debug("Get primary time series field visits");
-			report.setFieldVisits(getFieldVisits(primaryStationId, primaryZoneOffset, requestParameters));
-			
-			//Report Metadata
-			log.debug("Set report metadata");
-			report.setReportMetadata(getReportMetadata(requestParameters,
-				requestingUser,
-				primaryDescription.getLocationIdentifier(), 
-				primaryDescription.getIdentifier(),
-				primaryDescription.getUtcOffset(),
-				report.getPrimaryTsData().getGrades(), 
-				report.getPrimaryTsData().getQualifiers()
-			));
-		} catch (Exception e) {
-			log.error("Exception in buildReport: ", e.getMessage());
-		}
+		//Primary TS Metadata
+		log.debug("Get time series descriptions");
+		TimeSeriesDescription primaryDescription = timeSeriesDescriptionListService.getTimeSeriesDescription(requestParameters.getPrimaryTimeseriesIdentifier());
+		ZoneOffset primaryZoneOffset = TimeSeriesUtils.getZoneOffset(primaryDescription);
+		String primaryStationId = primaryDescription.getLocationIdentifier();
+
+		//Primary TS Data
+		log.debug("Get primary time series data points");
+		report.setPrimaryTsData(getCorrectedData(requestParameters, primaryZoneOffset, TimeSeriesUtils.isDailyTimeSeries(primaryDescription)));
+		
+		//Thresholds
+		log.debug("Get primary time series thresholds");
+		report.setThresholds(primaryDescription.getThresholds());
+		
+		//Corrections Data
+		log.debug("Get primary time series corrections");
+		report.setCorrections(getCorrectionsData(requestParameters, primaryZoneOffset, primaryStationId));
+		
+		//Field Visits
+		log.debug("Get primary time series field visits");
+		report.setFieldVisits(getFieldVisits(primaryStationId, primaryZoneOffset, requestParameters));
+		
+		//Report Metadata
+		log.debug("Set report metadata");
+		report.setReportMetadata(getReportMetadata(requestParameters,
+			requestingUser,
+			primaryDescription.getLocationIdentifier(), 
+			primaryDescription.getIdentifier(),
+			primaryDescription.getUtcOffset(),
+			report.getPrimaryTsData().getGrades(), 
+			report.getPrimaryTsData().getQualifiers()
+		));
 
 		return report;
 	}
