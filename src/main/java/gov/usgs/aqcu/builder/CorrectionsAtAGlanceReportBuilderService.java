@@ -111,28 +111,26 @@ public class CorrectionsAtAGlanceReportBuilderService {
 			TimeSeriesDataServiceResponse timeSeriesDataServiceResponse, boolean isDaily, 
 			ZoneOffset zoneOffset) {
 		TimeSeriesCorrectedData timeSeriesCorrectedData = new TimeSeriesCorrectedData();
-		try {
-			if (timeSeriesDataServiceResponse.getTimeRange() != null) {
-				timeSeriesCorrectedData.setStartTime(AqcuTimeUtils
-						.getTemporal(timeSeriesDataServiceResponse.getTimeRange().getStartTime(), isDaily, zoneOffset));
-				timeSeriesCorrectedData.setEndTime(AqcuTimeUtils
-						.getTemporal(timeSeriesDataServiceResponse.getTimeRange().getEndTime(), isDaily, zoneOffset));
-			}
-			timeSeriesCorrectedData.setNotes(timeSeriesDataServiceResponse.getNotes());
-			timeSeriesCorrectedData.setUnit(timeSeriesDataServiceResponse.getUnit());
-			timeSeriesCorrectedData.setType(timeSeriesDataServiceResponse.getParameter());
-	
-			timeSeriesCorrectedData.setApprovals(timeSeriesDataServiceResponse.getApprovals());
-			timeSeriesCorrectedData.setQualifiers(timeSeriesDataServiceResponse.getQualifiers());
-			timeSeriesCorrectedData.setGrades(timeSeriesDataServiceResponse.getGrades());
-			// Repgen just pulls the date for the headings, so we need to be sure and get
-			// the "correct" date - its internal filtering is potentially slightly skewed
-			// by this.
-			timeSeriesCorrectedData.setStartTime(requestParameters.getStartInstant(ZoneOffset.UTC));
-			timeSeriesCorrectedData.setEndTime(requestParameters.getEndInstant(ZoneOffset.UTC));
-		} catch (Exception e) {
-			log.error("Exception in createTimeSeriesCorrectedData: ", e.getMessage());
+
+		if (timeSeriesDataServiceResponse.getTimeRange() != null) {
+			timeSeriesCorrectedData.setStartTime(AqcuTimeUtils
+					.getTemporal(timeSeriesDataServiceResponse.getTimeRange().getStartTime(), isDaily, zoneOffset));
+			timeSeriesCorrectedData.setEndTime(AqcuTimeUtils
+					.getTemporal(timeSeriesDataServiceResponse.getTimeRange().getEndTime(), isDaily, zoneOffset));
 		}
+		timeSeriesCorrectedData.setNotes(timeSeriesDataServiceResponse.getNotes());
+		timeSeriesCorrectedData.setUnit(timeSeriesDataServiceResponse.getUnit());
+		timeSeriesCorrectedData.setType(timeSeriesDataServiceResponse.getParameter());
+
+		timeSeriesCorrectedData.setApprovals(timeSeriesDataServiceResponse.getApprovals());
+		timeSeriesCorrectedData.setQualifiers(timeSeriesDataServiceResponse.getQualifiers());
+		timeSeriesCorrectedData.setGrades(timeSeriesDataServiceResponse.getGrades());
+		// Repgen just pulls the date for the headings, so we need to be sure and get
+		// the "correct" date - its internal filtering is potentially slightly skewed
+		// by this.
+		timeSeriesCorrectedData.setStartTime(requestParameters.getStartInstant(ZoneOffset.UTC));
+		timeSeriesCorrectedData.setEndTime(requestParameters.getEndInstant(ZoneOffset.UTC));
+
 		return timeSeriesCorrectedData;
 	}
 	protected TimeSeriesCorrectedData getCorrectedData(CorrectionsAtAGlanceRequestParameters requestParameters, ZoneOffset primaryZoneOffset, boolean isDaily) {
