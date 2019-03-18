@@ -6,6 +6,47 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Initial release - happy path.
+- Add performance logging for report builder
+- Add debug log statements
+- Add additional try/catch error logging
+- Enable logging of application
 
-[Unreleased]: https://github.com/USGS-CIDA/aqcu-corr-report/compare/master...master
+### Changed
+- update to aqcu-framework version 0.0.6-SNAPSHOT
+
+## [0.0.2] - 2019-02-20
+### Added
+- Added a default Aquarius timeout. 
+- add specific timeout values
+
+### Changed
+- Disabled TLS 1.0/1.1 by default. 
+- Updated to AQCU Framework 0.0.5. Cleaned up some warnings. 
+- update SDK version to 18.8.1 
+- data service calls
+
+### Removed
+- CorrectionListService
+- FieldVisitDescriptionService
+- GradeLookupService
+- TimeSeriesDataCorrectedService
+- TimeSeriesDescriptionListService
+
+## [0.0.1] - 2018-09-24
+### Added
+- Initial release - happy path.
+- CorrectionListService
+- FieldVisitDescriptionService
+- GradeLookupService
+- TimeSeriesDataCorrectedService
+- TimeSeriesDescriptionListService
+- CorrectionsAtAGlanceRequestParameters
+- CorrectionsAtAGlanceCorrections
+- CorrectionsAtAGlanceFieldVisitDescription
+- CorrectionsAtAGlanceReport
+- CorrectionsAtAGlanceReportMetadata
+- TimeSeriesCorrectedData
+- CorrectionsAtAGlanceReportBuilderService
+
+[Unreleased]: https://github.com/USGS-CIDA/aqcu-ext-report/compare/aqcu-corr-report-0.0.2...master
+[0.0.2]: https://github.com/USGS-CIDA/aqcu-ext-report/compare/aqcu-corr-report-0.0.1...aqcu-corr-report-0.0.2

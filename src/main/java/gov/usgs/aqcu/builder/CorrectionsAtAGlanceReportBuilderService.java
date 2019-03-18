@@ -5,6 +5,8 @@ import java.util.List;
 import java.time.ZoneOffset;
 
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Qualifier;
@@ -15,12 +17,14 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Time
 
 import gov.usgs.aqcu.parameter.CorrectionsAtAGlanceRequestParameters;
 import gov.usgs.aqcu.util.AqcuTimeUtils;
+import gov.usgs.aqcu.util.LogExecutionTime;
 import gov.usgs.aqcu.util.TimeSeriesUtils;
 import gov.usgs.aqcu.model.*;
 import gov.usgs.aqcu.retrieval.*;
 
 @Service
 public class CorrectionsAtAGlanceReportBuilderService {
+	private Logger log = LoggerFactory.getLogger(CorrectionsAtAGlanceReportBuilderService.class);
 	public static final String REPORT_TITLE = "Corrections at a Glance";
 	public static final String REPORT_TYPE = "correctionsataglance";
 
@@ -49,28 +53,34 @@ public class CorrectionsAtAGlanceReportBuilderService {
 		this.timeSeriesDescriptionListService = timeSeriesDescriptionListService;
 		this.fieldVisitDescriptionService = fieldVisitDescriptionService;
 	}
-
+	
+	@LogExecutionTime
 	public CorrectionsAtAGlanceReport buildReport(CorrectionsAtAGlanceRequestParameters requestParameters, String requestingUser) {
 		CorrectionsAtAGlanceReport report = new CorrectionsAtAGlanceReport();
-
 		//Primary TS Metadata
+		log.debug("Get time series descriptions");
 		TimeSeriesDescription primaryDescription = timeSeriesDescriptionListService.getTimeSeriesDescription(requestParameters.getPrimaryTimeseriesIdentifier());
 		ZoneOffset primaryZoneOffset = TimeSeriesUtils.getZoneOffset(primaryDescription);
 		String primaryStationId = primaryDescription.getLocationIdentifier();
 
 		//Primary TS Data
+		log.debug("Get primary time series data points");
 		report.setPrimaryTsData(getCorrectedData(requestParameters, primaryZoneOffset, TimeSeriesUtils.isDailyTimeSeries(primaryDescription)));
 		
 		//Thresholds
+		log.debug("Get primary time series thresholds");
 		report.setThresholds(primaryDescription.getThresholds());
 		
 		//Corrections Data
+		log.debug("Get primary time series corrections");
 		report.setCorrections(getCorrectionsData(requestParameters, primaryZoneOffset, primaryStationId));
 		
 		//Field Visits
+		log.debug("Get primary time series field visits");
 		report.setFieldVisits(getFieldVisits(primaryStationId, primaryZoneOffset, requestParameters));
 		
 		//Report Metadata
+		log.debug("Set report metadata");
 		report.setReportMetadata(getReportMetadata(requestParameters,
 			requestingUser,
 			primaryDescription.getLocationIdentifier(), 
@@ -112,7 +122,7 @@ public class CorrectionsAtAGlanceReportBuilderService {
 		timeSeriesCorrectedData.setQualifiers(timeSeriesDataServiceResponse.getQualifiers());
 		timeSeriesCorrectedData.setGrades(timeSeriesDataServiceResponse.getGrades());
 		// Repgen just pulls the date for the headings, so we need to be sure and get
-		// the "correct" date - it's internal filtering is potentially slightly skewed
+		// the "correct" date - its internal filtering is potentially slightly skewed
 		// by this.
 		timeSeriesCorrectedData.setStartTime(requestParameters.getStartInstant(ZoneOffset.UTC));
 		timeSeriesCorrectedData.setEndTime(requestParameters.getEndInstant(ZoneOffset.UTC));
