@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add debug log statements
 - Add additional try/catch error logging
 - Enable logging of application
+- Coveralls and jacoco plugin to pom
+- coveralls/travis badging in readme.md
 
 ### Changed
 - update to aqcu-framework version 0.0.6-SNAPSHOT
