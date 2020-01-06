@@ -11,6 +11,9 @@
     include:
       - name: jacoco
         language: java
+        install:
+          # intentional no-op to prevent running unnecessary maven commands
+          - true
         script:
           # the -D option supresses INFO-level logs about dependency downloads. This enables the build to finish within Travis' log length limit.
           # The -P option skips the dependency security check in favor of build stability -- the official NVD server is rate-limited, and external builds lack access to our internal NVD mirror
