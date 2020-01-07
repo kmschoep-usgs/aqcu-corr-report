@@ -47,9 +47,9 @@ public class Controller {
 	}
 	
 	@GetMapping(value="/rawData", produces={MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<CorrectionsAtAGlanceReport> getReportRawData(@Validated CorrectionsAtAGlanceRequestParameters requestParameters) throws Exception {
+	public ResponseEntity<String> getReportRawData(@Validated CorrectionsAtAGlanceRequestParameters requestParameters) throws Exception {
 		CorrectionsAtAGlanceReport report = reportBuilderService.buildReport(requestParameters, getRequestingUser());
-		return new ResponseEntity<CorrectionsAtAGlanceReport>(report, new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<String>(gson.toJson(report, CorrectionsAtAGlanceReport.class), new HttpHeaders(), HttpStatus.OK);
 	}
 
 	String getRequestingUser() {
