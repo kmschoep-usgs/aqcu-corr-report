@@ -25,8 +25,18 @@ RUN mvn -B dependency:go-offline
 COPY dependency-check-suppression.xml /build
 COPY .git /build
 COPY src /build/src
+
+# Release Verification
+ARG RELEASE=false
+ARG RELEASE_COMMAND="mvn -B -DdryRun=true release:prepare"
 ARG BUILD_COMMAND="mvn -B clean verify"
-RUN ${BUILD_COMMAND}
+RUN if $RELEASE -eq "true"; then \
+		echo "Execute release build: '$RELEASE_COMMAND'" ; \
+		$RELEASE_COMMAND ;\
+	else \
+		echo "Execute standard build: '$BUILD_COMMAND'" ; \
+		$BUILD_COMMAND ; \
+	fi
 
 FROM usgswma/wma-spring-boot-base:8-jre-slim-0.0.4
 
